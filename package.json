@@ -3,6 +3,7 @@
   "displayName": "big if true",
   "description": "big if true",
   "version": "0.0.1",
+  "publisher": "big-if-true",
   "engines": {
     "vscode": "^1.90.0"
   },
