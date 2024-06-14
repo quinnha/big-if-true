@@ -2,7 +2,7 @@
   "name": "big-if-true",
   "displayName": "big if true",
   "description": "big if true",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "big-if-true",
   "engines": {
     "vscode": "^1.90.0"
