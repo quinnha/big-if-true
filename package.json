@@ -15,6 +15,10 @@
     "onCommand:vscode-linter.lintAlwaysTrueIf"
   ],
   "main": "./out/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quinnha/big-if-true"
+  },
   "contributes": {
     "commands": [
       {
