@@ -9,13 +9,21 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onCommand:vscode-linter.lintAlwaysTrueIf"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "big-if-true.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "big-if-true.lintAlwaysTrueIf",
+        "title": "lint always true if statements"
       }
     ]
   },
@@ -28,14 +36,19 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.90.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0"
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@types/acorn": "^6.0.0",
+    "acorn": "^8.12.0",
+    "acorn-walk": "^8.3.3"
   }
 }
