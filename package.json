@@ -29,7 +29,7 @@
       },
       {
         "command": "big-if-true.lintAlwaysTrueIf",
-        "title": "lint always true if statements"
+        "title": "make big if true"
       }
     ]
   },

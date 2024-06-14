@@ -11,10 +11,11 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   function lintDocument(editor: vscode.TextEditor) {
-    console.log("Linting document:", editor.document.fileName); // Debug log
+    console.log("Linting document:", editor.document.fileName);
     const text = editor.document.getText();
     const ast = acorn.parse(text, {
       ecmaVersion: 2020,
+      sourceType: "module",
       locations: true,
     }) as acorn.Node;
 
@@ -104,7 +105,6 @@ export function activate(context: vscode.ExtensionContext) {
       return undefined;
     }
 
-    // Analyze the AST starting from the root
     walk.simple(ast, {
       VariableDeclaration(node: acorn.Node) {
         analyzeNode(node);
@@ -114,11 +114,9 @@ export function activate(context: vscode.ExtensionContext) {
       },
     });
 
-    // Apply decorations to the editor
     editor.setDecorations(decorationType, ranges);
   }
 
-  // Register the command for manual execution
   let disposable = vscode.commands.registerCommand(
     "big-if-true.lintAlwaysTrueIf",
     () => {
@@ -133,7 +131,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable);
 
-  // Listen for document changes and apply linting
   vscode.workspace.onDidChangeTextDocument((event) => {
     const editor = vscode.window.visibleTextEditors.find(
       (e) => e.document === event.document
@@ -143,7 +140,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  // Apply linting when the document is saved
   vscode.workspace.onDidSaveTextDocument((document) => {
     const editor = vscode.window.visibleTextEditors.find(
       (e) => e.document === document
@@ -153,7 +149,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  // Apply linting when the active editor changes
   vscode.window.onDidChangeActiveTextEditor((editor) => {
     if (editor) {
       lintDocument(editor);
@@ -161,5 +156,4 @@ export function activate(context: vscode.ExtensionContext) {
   });
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
