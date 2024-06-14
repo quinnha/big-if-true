@@ -2,8 +2,8 @@
 
 All notable changes to the "big-if-true" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [Unreleased]
 
-- Initial release
+### Added
+
+- v1.0 Big if True for JS and TS
