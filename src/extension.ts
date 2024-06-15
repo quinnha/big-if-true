@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as acorn from "acorn";
+import * as acornLoose from "acorn-loose";
 import * as walk from "acorn-walk";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -13,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
   function lintDocument(editor: vscode.TextEditor) {
     console.log("Linting document:", editor.document.fileName);
     const text = editor.document.getText();
-    const ast = acorn.parse(text, {
+    const ast = acornLoose.parse(text, {
       ecmaVersion: 2020,
       sourceType: "module",
       locations: true,
