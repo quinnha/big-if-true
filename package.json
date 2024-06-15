@@ -2,7 +2,7 @@
   "name": "big-if-true",
   "displayName": "big if true",
   "description": "if true, make big (wide)",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "publisher": "big-if-true",
   "icon": "logo.png",
   "engines": {
