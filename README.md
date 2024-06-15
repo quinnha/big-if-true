@@ -8,4 +8,8 @@ something wrong? write an issue or dm me on twitter @qvinnh
 
 ### 1.0.0
 
+first stable release, includes scope checking, and works with other linters
+
+### 0.0.0
+
 initial release of big-if-true, with support for JS and TS
