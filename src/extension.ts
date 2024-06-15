@@ -23,22 +23,38 @@ export function activate(context: vscode.ExtensionContext) {
     const ranges: vscode.DecorationOptions[] = [];
     const variableValues: { [key: string]: any } = {};
 
-    function analyzeNode(node: acorn.Node) {
+    function analyzeNode(node: acorn.Node, scope: { [key: string]: any }) {
       switch (node.type) {
         case "VariableDeclaration":
           (node as acorn.Node & { declarations: any[] }).declarations.forEach(
             (declaration: any) => {
               if (declaration.init && declaration.id.type === "Identifier") {
-                variableValues[declaration.id.name] = evaluateExpression(
-                  declaration.init
+                scope[declaration.id.name] = evaluateExpression(
+                  declaration.init,
+                  scope
                 );
               }
             }
           );
           break;
+        case "ExpressionStatement":
+          if (
+            (node as acorn.Node & { expression: any }).expression.type ===
+            "AssignmentExpression"
+          ) {
+            const expression = (node as acorn.Node & { expression: any })
+              .expression;
+            if (expression.left.type === "Identifier") {
+              scope[expression.left.name] = evaluateExpression(
+                expression.right,
+                scope
+              );
+            }
+          }
+          break;
         case "IfStatement":
           const ifNode = node as acorn.Node & { test: any };
-          if (evaluateExpression(ifNode.test) === true) {
+          if (evaluateExpression(ifNode.test, scope) === true) {
             const startLine = ifNode.loc?.start.line
               ? ifNode.loc.start.line - 1
               : 0;
@@ -54,20 +70,23 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
 
-    function evaluateExpression(node: acorn.Node): any {
+    function evaluateExpression(
+      node: acorn.Node,
+      scope: { [key: string]: any }
+    ): any {
       switch (node.type) {
         case "Literal":
           return (node as acorn.Node & { value: any }).value;
         case "Identifier":
-          return variableValues[(node as acorn.Node & { name: string }).name];
+          return scope[(node as acorn.Node & { name: string }).name];
         case "BinaryExpression":
           const binaryNode = node as acorn.Node & {
             left: any;
             right: any;
             operator: string;
           };
-          const left = evaluateExpression(binaryNode.left);
-          const right = evaluateExpression(binaryNode.right);
+          const left = evaluateExpression(binaryNode.left, scope);
+          const right = evaluateExpression(binaryNode.right, scope);
           switch (binaryNode.operator) {
             case "==":
               return left == right;
@@ -93,8 +112,8 @@ export function activate(context: vscode.ExtensionContext) {
             right: any;
             operator: string;
           };
-          const leftLogical = evaluateExpression(logicalNode.left);
-          const rightLogical = evaluateExpression(logicalNode.right);
+          const leftLogical = evaluateExpression(logicalNode.left, scope);
+          const rightLogical = evaluateExpression(logicalNode.right, scope);
           switch (logicalNode.operator) {
             case "&&":
               return leftLogical && rightLogical;
@@ -108,10 +127,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     walk.simple(ast, {
       VariableDeclaration(node: acorn.Node) {
-        analyzeNode(node);
+        analyzeNode(node, variableValues);
+      },
+      ExpressionStatement(node: acorn.Node) {
+        analyzeNode(node, variableValues);
       },
       IfStatement(node: acorn.Node) {
-        analyzeNode(node);
+        analyzeNode(node, variableValues);
       },
     });
 
